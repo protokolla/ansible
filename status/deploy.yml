@@ -1,0 +1,50 @@
+---
+
+- hosts: status
+  tasks:
+  - name: Install Docker Dependencies & other cool stuff
+    apt: name={{ item }} state=latest update_cache=yes
+    with_items:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - software-properties-common 
+      - gpg
+      - git
+    tags: docker
+
+  - name: Get Docker key
+    apt_key:
+      url: https://download.docker.com/linux/ubuntu/gpg
+      state: present
+    tags: docker
+
+  - name: Add Docker packages to Repository
+    apt_repository:
+      repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_lsb.codename|lower }} stable
+    tags: docker
+
+  - name: Install Docker-CE
+    apt: name="docker-ce" state=latest update_cache=yes
+    tags: docker
+
+  - name: Install docker-compose
+    apt: name="docker-compose" state=latest
+    tags: docker
+
+  - name: Enable & start docker
+    ansible.builtin.systemd:
+      name: docker
+      enabled: true
+      state: started
+
+  - name: Ensure directory for Docker service exists.
+    file: "path=/opt/status state=directory"
+
+  - name: Copy docker-compose
+    copy: src=docker-compose.yml
+          dest=/opt/status/docker-compose.yml
+
+  - name: Start the status page
+    community.docker.docker_compose:
+      project_src: /opt/status

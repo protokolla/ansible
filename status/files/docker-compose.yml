@@ -1,0 +1,55 @@
+version: '3.4'
+
+services:
+  mariadb:
+    image: mariadb:10.2
+    environment:
+      MARIADB_RANDOM_ROOT_PASSWORD: absolutely
+      MYSQL_DATABASE: statping
+      MYSQL_USER: statping
+      MYSQL_PASSWORD: statping
+    restart: on-failure
+    volumes:
+     - /opt/status/data/mariadb:/var/lib/mysql
+
+  traefik:
+    image: "traefik:latest"
+    container_name: "traefik"
+    command:
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--certificatesresolvers.httpchallenge.acme.httpchallenge=true"
+      - "--certificatesresolvers.httpchallenge.acme.httpchallenge.entrypoint=web"
+      - "--certificatesresolvers.httpchallenge.acme.email=erikoisjaakari@koira.testausserveri.fi"
+      - "--certificatesresolvers.httpchallenge.acme.storage=/letsencrypt/acme.json"
+      - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
+      - "--entrypoints.web.http.redirections.entrypoint.permanent=true"
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - "/opt/status/data/letsencrypt:/letsencrypt"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    restart: unless-stopped
+
+  statping:
+    image: adamboutcher/statping-ng:latest
+    environment:
+      DB_CONN: mysql
+      DB_HOST: mariadb
+      DB_USER: statping
+      DB_PASS: statping
+      DB_DATABASE: statping
+    labels:
+      # routing
+      - "traefik.enable=true"
+      - "traefik.http.routers.protokollastatus.rule=Host(`status.protokolla.fi`)"
+      # SSL
+      - "traefik.http.routers.protokollastatus.entrypoints=websecure"
+      - "traefik.http.routers.protokollastatus.tls.certresolver=httpchallenge"
+    volumes:
+      - '/opt/status/data/statping:/app/'
