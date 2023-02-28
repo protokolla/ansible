@@ -38,13 +38,12 @@
       enabled: true
       state: started
 
-  - name: Ensure directory for Docker service exists.
-    file: "path=/opt/status state=directory"
+- name: Deploy statping
+  hosts: status
+  roles:
+    - statping
 
-  - name: Copy docker-compose
-    copy: src=docker-compose.yml
-          dest=/opt/status/docker-compose.yml
-
-  - name: Start the status page
-    community.docker.docker_compose:
-      project_src: /opt/status
+- name: Deploy tor-bridge
+  hosts: torbridge
+  roles:
+    - tor-bridge
