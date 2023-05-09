@@ -1,0 +1,14 @@
+- name: Set MOTD
+  hosts: all
+  roles:
+    - big-motd
+
+- name: Install common software
+  hosts: all
+  roles:
+    - common-software
+
+- name: Install docker
+  hosts: all
+  roles:
+    - docker-installation

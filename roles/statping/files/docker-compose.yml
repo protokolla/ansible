@@ -3,17 +3,19 @@ version: '3.4'
 services:
   mariadb:
     image: mariadb:10.2
+    container_name: mariadb
+    restart: always
     environment:
       MARIADB_RANDOM_ROOT_PASSWORD: absolutely
       MYSQL_DATABASE: statping
       MYSQL_USER: statping
       MYSQL_PASSWORD: statping
-    restart: on-failure
     volumes:
      - /opt/status/data/mariadb:/var/lib/mysql
 
   traefik:
     image: "traefik:latest"
+    restart: always
     container_name: "traefik"
     command:
       - "--api.insecure=true"
@@ -34,10 +36,11 @@ services:
     volumes:
       - "/opt/status/data/letsencrypt:/letsencrypt"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
-    restart: unless-stopped
 
   statping:
     image: adamboutcher/statping-ng:latest
+    restart: always
+    container_name: statping
     environment:
       DB_CONN: mysql
       DB_HOST: mariadb

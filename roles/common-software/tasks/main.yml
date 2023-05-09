@@ -1,0 +1,11 @@
+- name: Install common & useful software
+  apt: name={{ item }} state=latest update_cache=yes
+  with_items:
+      - gpg
+      - git
+      - curl
+      - net-tools
+      - vim
+      - ncdu
+      - htop
+      - jq

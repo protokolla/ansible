@@ -1,0 +1,12 @@
+# - name: Install update-motd & software used by motd
+#   apt: name={{ item }} state=latest update_cache=yes
+#   with_items:
+#       - update-motd
+
+# - find: paths="." recurse=yes patterns="\d\d-.*"
+#   register: motds_to_copy
+# - copy: src={{ item.path }} dest=/etc/update-motd.d/
+#   owner: root
+#   mode: 0755
+#   with_items: 
+#     - "{{ motds_to_copy.files }}"

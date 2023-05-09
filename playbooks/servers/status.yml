@@ -1,0 +1,9 @@
+- name: Deploy statping
+  hosts: status
+  roles:
+    - statping
+
+- name: Deploy tor-bridge
+  hosts: status
+  roles:
+    - tor-bridge
