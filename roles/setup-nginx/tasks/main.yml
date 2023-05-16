@@ -1,0 +1,50 @@
+---
+- name: Install nginx & TLS/SSL certificates
+  apt: name={{ item }} state=latest update_cache=yes
+  with_items:
+      - nginx
+
+- name: Delete default nginx vhost file
+  file: path=/etc/nginx/sites-available/default state=absent
+
+- name: Delete default nginx vhost symlink
+  file: path=/etc/nginx/sites-enabled/default state=absent
+
+- name: update /etc/nginx/nginx.conf with validation
+  copy:
+    src: "{{ item }}"
+    dest: /etc/nginx/sites-available
+    owner: root
+    group: root
+    mode: 0644
+    validate: nginx -t -c %s
+  with_fileglob:
+    - ""
+
+- name: Create symlink nginx vhost
+  file:
+    src=/etc/nginx/sites-available/protokolla.conf
+    dest=/etc/nginx/sites-enabled/protokolla.conf
+    state=link
+
+- name: Enable & start nginx
+  ansible.builtin.systemd:
+    name: nginx
+    enabled: true
+    state: started
+
+- name: Clone acme.sh repo
+  ansible.builtin.git:
+    repo: https://github.com/acmesh-official/acme.sh.git
+    dest: /usr/src/acme.sh
+
+- name: Allow acme.sh script execution
+  ansible.builtin.file:
+    dest: "/usr/src/acme.sh/acme.sh"
+    mode: 'a+x'
+
+- name: Symlink acme.sh
+  file:
+    src=/usr/src/acme.sh/acme.sh
+    dest=/usr/local/bin/acme.sh
+    state=link

@@ -1,0 +1,20 @@
+---
+- name: Ensure directory for Docker service exists.
+  file: "path=/opt/status state=directory"
+
+- name: Ensure directory for Gatus config exists.
+  file: "path=/opt/status/config state=directory"
+
+- name: Template docker-compose
+  ansible.builtin.template:
+    src: docker-compose.yml.j2
+    dest: /opt/status/docker-compose.yml
+
+- name: Template gatus config
+  ansible.builtin.template:
+    src: gatus-config.yml.j2
+    dest: /opt/status/config/config.yml
+
+- name: Start the status page
+  community.docker.docker_compose:
+    project_src: /opt/status

@@ -1,0 +1,133 @@
+skip-invalid-config-update: true
+disable-monitoring-lock: true
+
+alerting:
+  matrix:
+    server-url: "https://protokolla.fi"
+    access-token: "{{ MATRIX_PROTOKOLLA_ACCESS_TOKEN }}"
+    internal-room-id: "#status:protokolla.fi"
+
+endpoints:
+  # ***************
+  # protokolla.fi
+  # ***************
+  - name: protokolla.fi - website
+    interval: 1m
+    group: 01 - protokolla.fi
+    url: "https://protokolla.fi"
+    conditions:
+      - "[STATUS] == 200"
+    alerts:
+      - type: matrix
+        send-on-resolved: true
+  - name: protokolla.fi - bitwarden
+    interval: 1m
+    group: 01 - protokolla.fi
+    url: "https://vault.protokolla.fi"
+    conditions:
+      - "[STATUS] == 200"
+    alerts:
+      - type: matrix
+        send-on-resolved: true
+  - name: protokolla.fi - bitwarden
+    interval: 1m
+    group: 01 - protokolla.fi
+    url: "https://vault.protokolla.fi"
+    conditions:
+      - "[STATUS] == 200"
+    alerts:
+      - type: matrix
+        send-on-resolved: true
+  - name: protokolla.fi - invidious
+    interval: 1m
+    group: 01 - protokolla.fi
+    url: "https://invidious.protokolla.fi"
+    conditions:
+      - "[STATUS] == 200"
+    alerts:
+      - type: matrix
+        send-on-resolved: true
+  # ***************
+  # imap.fi
+  # ***************
+  - name: imap.fi - website
+    interval: 1m
+    group: 04 - imap.fi
+    url: "https://imap.fi"
+    conditions:
+      - "[STATUS] == 200"
+    alerts:
+      - type: matrix
+        send-on-resolved: true
+  - name: imap.fi - server
+    interval: 1m
+    group: 04 - imap.fi
+    url: "https://server.imap.fi"
+    conditions:
+      - "[STATUS] == 200"
+    alerts:
+      - type: matrix
+        send-on-resolved: true
+  # ***************
+  # pastebin.fi
+  # ***************
+  - name: pastebin.fi - frontend
+    interval: 1m
+    group: 03 - pastebin.fi
+    url: "https://pastebin.fi"
+    conditions:
+      - "[STATUS] == 200"
+    alerts:
+      - type: matrix
+        send-on-resolved: true
+  - name: pastebin.fi - backend
+    interval: 1m
+    group: 03 - pastebin.fi
+    url: "https://api.pastebin.fi"
+    conditions:
+      - "[STATUS] == 200"
+    alerts:
+      - type: matrix
+        send-on-resolved: true
+  # ***************
+  # searx.fi
+  # ***************
+  - name: searx.fi
+    interval: 1m
+    group: 02 - searx.fi
+    url: "https://searx.fi"
+    conditions:
+      - "[STATUS] == 200"
+    alerts:
+      - type: matrix
+        send-on-resolved: true
+  # ***************
+  # SERVERS
+  # ***************
+  - name: metso
+    interval: 1m
+    group: 05 - servers
+    url: "icmp://metso.protokolla.fi"
+    conditions:
+      - "[CONNECTED] == true"
+    alerts:
+      - type: matrix
+        send-on-resolved: true
+  - name: vps01
+    interval: 1m
+    group: 05 - servers
+    url: "icmp://vps1.protokolla.fi"
+    conditions:
+      - "[CONNECTED] == true"
+    alerts:
+      - type: matrix
+        send-on-resolved: true
+  - name: vps02
+    interval: 1m
+    group: 05 - servers
+    url: "icmp://vps1.protokolla.fi"
+    conditions:
+      - "[CONNECTED] == true"
+    alerts:
+      - type: matrix
+        send-on-resolved: true

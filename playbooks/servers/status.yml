@@ -1,7 +1,7 @@
-- name: Deploy statping
+- name: Deploy gatus
   hosts: status
   roles:
-    - statping
+    - gatus
 
 - name: Deploy tor-bridge
   hosts: status
