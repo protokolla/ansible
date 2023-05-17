@@ -1,0 +1,9 @@
+- name: Setup nginx
+  hosts: main
+  roles:
+    - setup-nginx
+
+- name: Install gitea
+  hosts: main
+  roles:
+    - gitea

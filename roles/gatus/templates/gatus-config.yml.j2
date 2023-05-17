@@ -29,10 +29,10 @@ endpoints:
     alerts:
       - type: matrix
         send-on-resolved: true
-  - name: protokolla.fi - bitwarden
+  - name: protokolla.fi - hedgedoc
     interval: 1m
     group: 01 - protokolla.fi
-    url: "https://vault.protokolla.fi"
+    url: "https://doc.protokolla.fi"
     conditions:
       - "[STATUS] == 200"
     alerts:

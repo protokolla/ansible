@@ -37,6 +37,12 @@
   apt: name="docker-compose-plugin" state=latest update_cache=yes
   tags: docker
 
+- name: Install docker python packages
+  ansible.builtin.pip:
+    name:
+      - docker
+      - docker-compose
+
 - name: Enable & start docker
   ansible.builtin.systemd:
     name: docker

@@ -1,5 +1,5 @@
 ---
-- name: Install nginx & TLS/SSL certificates
+- name: Install nginx
   apt: name={{ item }} state=latest update_cache=yes
   with_items:
       - nginx
@@ -10,28 +10,41 @@
 - name: Delete default nginx vhost symlink
   file: path=/etc/nginx/sites-enabled/default state=absent
 
-- name: update /etc/nginx/nginx.conf with validation
+- name: Copy nginx website config with validation
   copy:
     src: "{{ item }}"
-    dest: /etc/nginx/sites-available
+    dest: /etc/nginx/sites-available/
     owner: root
     group: root
     mode: 0644
-    validate: nginx -t -c %s
+    # validate: nginx -t -c %s
   with_fileglob:
-    - ""
+    - "*.conf"
 
-- name: Create symlink nginx vhost
+- name: Find all files in sites-available
+  find:
+    paths: /etc/nginx/sites-available/
+  register: sitesavailable
+
+- name: Create symlinks to sites-enabled
   file:
-    src=/etc/nginx/sites-available/protokolla.conf
-    dest=/etc/nginx/sites-enabled/protokolla.conf
-    state=link
+    src: "{{ item.path }}"
+    path: "/etc/nginx/sites-enabled/{{ item.path | basename }}"
+    state: link
+  with_items: "{{ sitesavailable.files }}"
 
-- name: Enable & start nginx
+- name: Enable & restart nginx
   ansible.builtin.systemd:
     name: nginx
     enabled: true
-    state: started
+    state: restarted
+
+# [Wed May 17 09:11:43 CEST 2023] Your cert is in: /etc/ssl/nginx/git.protokolla.fi_ecc/git.protokolla.fi.cer
+# [Wed May 17 09:11:43 CEST 2023] Your cert key is in: /etc/ssl/nginx/git.protokolla.fi_ecc/git.protokolla.fi.key
+# [Wed May 17 09:11:43 CEST 2023] The intermediate CA cert is in: /etc/ssl/nginx/git.protokolla.fi_ecc/ca.cer
+# [Wed May 17 09:11:43 CEST 2023] And the full chain certs is there: /etc/ssl/nginx/git.protokolla.fi_ecc/fullchain.cer
+
+# acme.sh --issue -d git.protokolla.fi --nginx --server letsencrypt --home /etc/ssl/nginx/
 
 - name: Clone acme.sh repo
   ansible.builtin.git:
@@ -48,3 +61,6 @@
     src=/usr/src/acme.sh/acme.sh
     dest=/usr/local/bin/acme.sh
     state=link
+
+# - name: Run a command using a templated variable (always use quote filter to avoid injection)
+#   ansible.builtin.shell: acme.sh --issue -d git.protokolla.fi --nginx --server letsencrypt --home /etc/ssl/nginx/

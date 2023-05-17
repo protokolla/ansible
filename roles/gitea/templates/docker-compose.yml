@@ -1,0 +1,58 @@
+version: "3"
+
+services:
+  server:
+    image: gitea/gitea:1.19.0
+    container_name: gitea
+    environment:
+      # Just use whatever user there already is
+      # - USER_UID=1000
+      # - USER_GID=1000
+      # database
+      - GITEA__database__DB_TYPE=postgres
+      - GITEA__database__HOST=db:5432
+      - GITEA__database__NAME=gitea
+      - GITEA__database__USER=gitea
+      - GITEA__database__PASSWD=gitea
+      # mails
+      - GITEA__mailer__ENABLED=true
+      - GITEA__mailer__FROM={{ GITEA_MAIL_FROM }}
+      - GITEA__mailer__MAILER_TYPE=smtp
+      - GITEA__mailer__HOST={{ GITEA_MAIL_HOST }}
+      - GITEA__mailer__IS_TLS_ENABLED={{ GITEA_MAIL_TLS }}
+      - GITEA__mailer__USER={{ GITEA_MAIL_FROM }}
+      - GITEA__mailer__PASSWD="""{{ GITEA_MAIL_PASSWD }}"""
+      # auth
+      # comment: sadly this cannot be configured ini/env vars
+      - GITEA__openid__ENABLE_OPENID_SIGNIN=false
+      - GITEA__oauth2_client_ENABLE_AUTO_REGISTRATION=true
+      - GITEA__oauth2_client_OPENID_CONNECT_SCOPES=openid,email,profile
+      - GITEA__oauth2_client_USERNAME=nickname
+      - GITEA__oauth2_client_UPDATE_AVATAR=true
+      - GITEA__oauth2_client_ACCOUNT_LINKING=auto
+      # TODO: media proxy
+      # - GITEA__camo__ENABLED=true
+      # - GITEA__camo__ALLWAYS=true
+      # - GITEA__camo__SERVER_URL=to be done
+    restart: always
+    volumes:
+      - ./data/gitea:/data
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    ports:
+      - "8000:3000"
+      - "222:22"
+    depends_on:
+      - db
+
+  db:
+    image: postgres:14
+    restart: always
+    environment:
+      - POSTGRES_USER=gitea
+      - POSTGRES_PASSWORD=gitea
+      - POSTGRES_DB=gitea
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+
+# TODO: backups

@@ -1,0 +1,12 @@
+---
+- name: Ensure directory for Docker service exists.
+  file: "path=/opt/gitea state=directory"
+
+- name: Template docker-compose
+  ansible.builtin.template:
+    src: docker-compose.yml
+    dest: /opt/gitea/docker-compose.yml
+
+- name: Start gitea
+  community.docker.docker_compose:
+    project_src: /opt/gitea
