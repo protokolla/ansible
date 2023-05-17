@@ -1,6 +1,13 @@
 # ansible
 This repository contains all Ansible scripts used to manage protokolla.fi services.
 
+## mirrors
+
+This repository can be found on
+
+- [protokolla.fi's Gitea](https://git.protokolla.fi/protokolla/ansible)
+- [Github](https://github.com/protokolla/ansible/)
+
 ## Prepare all servers
 
 ## Metso
