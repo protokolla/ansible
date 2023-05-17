@@ -5,8 +5,8 @@ This repository contains all Ansible scripts used to manage protokolla.fi servic
 
 This repository can be found on
 
-- [protokolla.fi's Gitea](https://git.protokolla.fi/protokolla/ansible)
-- [Github](https://github.com/protokolla/ansible/)
+- [protokolla.fi's Gitea](https://git.protokolla.fi/protokolla/ansible) - push your commits here
+- [Github](https://github.com/protokolla/ansible/) - only a read-only mirror / resets every 15 min to gitea repos state
 
 ## Prepare all servers
 
