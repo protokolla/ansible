@@ -1,0 +1,24 @@
+use_default_settings: true
+
+server:
+    # base_url is defined in the SEARXNG_BASE_URL environment variable, see .env and docker-compose.yml
+    secret_key: "{{ SEARX_SECRET_KEY }}"
+    bind_address: "0.0.0.0"
+    limiter: false # please switch to  true to avoid abuse
+    image_proxy: true
+general:
+    debug: true
+    instance_name:  "searx.fi"
+    privacypolicy_url: false
+    donation_url: "https://liberapay.com/roy"
+    contact_url: mailto:sysadmin@protokolla.fi
+    enable_metrics: true
+ui:
+    static_use_hash: true
+    # default_locale: "en"
+    query_in_title: true
+redis:
+    url: redis://redis:6379/0
+hostname_replace:
+    '(.*\.)?youtube\.com$': 'invidious.protokolla.fi'
+    '(.*\.)?youtu\.be$': 'invidious.protokolla.fi'

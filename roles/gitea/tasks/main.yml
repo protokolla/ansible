@@ -9,4 +9,5 @@
 
 - name: Start gitea
   community.docker.docker_compose:
+    restarted: true
     project_src: /opt/gitea

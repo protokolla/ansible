@@ -17,7 +17,7 @@
     owner: root
     group: root
     mode: 0644
-    # validate: nginx -t -c %s
+    validate: nginx -t -c %s
   with_fileglob:
     - "*.conf"
 

@@ -1,0 +1,56 @@
+version: '3.3'
+
+services:
+  redis:
+    container_name: redis
+    image: "redis:alpine"
+    restart: always
+    command: redis-server --save "" --appendonly "no"
+    tmpfs:
+      - /var/lib/redis
+
+  searxng:
+    container_name: searxng
+    image: searxng/searxng:latest
+    restart: always
+    ports:
+     - "127.0.0.1:8010:8080"
+    volumes:
+      - ./config:/etc/searxng:rw
+    environment:
+      - SEARXNG_BASE_URL=https://searx.fi/
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "1"
+
+  goaccess:
+    image: allinurl/goaccess
+    restart: always
+    command: > 
+      /srv/logs/searx.fi_access.log
+      -o /srv/report/index.html
+      --real-time-html
+      --origin=https://searx.fi
+      --ws-url=wss://searx.fi:443/goaccessws
+      --log-format='%h - %^ [%d:%t %^] "%r" %s %b "%u" "%^"'
+      --time-format='%T'
+      --date-format='%d/%b/%Y'
+      --db-path=/srv/data
+      --persist
+      --restore
+      --anonymize-ip
+      --anonymize-level=2
+      --port 80
+    ports:
+      -  "127.0.0.1:8011:80"
+    volumes:
+    - /var/log/nginx/:/srv/logs:ro
+    - /var/www/goaccess/searx.fi:/srv/report
+    - ./data/goaccess:/srv/data
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "1"

@@ -12,4 +12,5 @@
 
 - name: Start the tor bridge
   community.docker.docker_compose:
+    restarted: true
     project_src: /opt/tor-bridge
