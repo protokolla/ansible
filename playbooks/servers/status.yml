@@ -1,9 +1,0 @@
-- name: Deploy gatus
-  hosts: status
-  roles:
-    - gatus
-
-- name: Deploy tor-bridge
-  hosts: status
-  roles:
-    - tor-bridge

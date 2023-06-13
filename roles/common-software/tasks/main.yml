@@ -8,6 +8,7 @@
       - vim
       - ncdu
       - htop
-      - jq
       - python3
       - python3-pip
+      # Required by motd
+      - jq

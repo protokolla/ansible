@@ -1,0 +1,4 @@
+---
+- name: Set hostname to match the inventory.ini file
+  hostname:
+    name: "{{ inventory_hostname.split('@')[1] }}"
