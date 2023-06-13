@@ -3,6 +3,16 @@
   roles:
     - setup-nginx
 
+- name: Install invidious
+  hosts: main
+  roles:
+    - invidious
+
+- name: Install watchtower
+  hosts: main
+  roles:
+    - watchtower
+
 - name: Install gitea
   hosts: main
   roles:

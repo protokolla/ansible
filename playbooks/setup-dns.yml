@@ -1,0 +1,10 @@
+# - name: Install PowerDNS primary resolver
+#   hosts: main
+#   roles:
+#     - powerdns-primary
+
+- name: Install PowerDNS secondary resolver
+  hosts: secondarydns
+  become: true
+  roles:
+    - powerdns-secondary

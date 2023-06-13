@@ -1,0 +1,11 @@
+version: '3.3'
+
+services:
+  watchtower:
+    image: containrrr/watchtower
+    restart: always
+    container_name: watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /etc/timezone:/etc/timezone:ro
+    command: --interval 10

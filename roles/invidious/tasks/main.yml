@@ -1,0 +1,19 @@
+---
+- name: Ensure directory for Docker service exists.
+  file: "path=/opt/invidious state=directory"
+
+- name: Template docker-compose
+  ansible.builtin.template:
+    src: docker-compose.yml.j2
+    dest: /opt/invidious/docker-compose.yml
+
+- name: Start the invidious instance
+  community.docker.docker_compose:
+    restarted: true
+    project_src: /opt/invidious
+
+- name: Ensure a job that restarts invidious every hour exists 
+  ansible.builtin.cron:
+    name: "restart invidious"
+    minute: "0"
+    job: "docker compose -f /opt/invidious/docker-compose.yml down && docker compose -f /opt/invidious/docker-compose.yml up -d"

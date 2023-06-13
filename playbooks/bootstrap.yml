@@ -1,14 +1,14 @@
 - name: Set MOTD
-  hosts: all
+  hosts: secondarydns
   roles:
     - big-motd
 
 - name: Install common software
-  hosts: all
+  hosts: secondarydns
   roles:
     - common-software
 
 - name: Install docker
-  hosts: all
+  hosts: secondarydns
   roles:
     - docker-installation

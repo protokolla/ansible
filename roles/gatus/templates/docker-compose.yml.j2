@@ -3,10 +3,10 @@ version: '3.4'
 services:
   statuspostgres:
     image: postgres
-    restart: unless-stopped
+    restart: always
     container_name: status_postgres
     volumes:
-      - status_db:/var/lib/postgresql/data
+      - ./db:/var/lib/postgresql/data
     environment:
       - POSTGRES_DB=gatus
       - POSTGRES_USER=username
@@ -14,7 +14,7 @@ services:
 
   gatus:
     image: twinproduction/gatus:latest
-    restart: unless-stopped
+    restart: always
     container_name: gatus
     labels:
       # routing
@@ -48,10 +48,6 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - "letsencrypt:/letsencrypt"
+      - "./letsencrypt:/letsencrypt"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
-    restart: unless-stopped
-
-volumes:
-  letsencrypt:
-  status_db:
+    restart: always

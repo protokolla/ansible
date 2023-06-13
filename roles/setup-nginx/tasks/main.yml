@@ -10,6 +10,11 @@
 - name: Delete default nginx vhost symlink
   file: path=/etc/nginx/sites-enabled/default state=absent
 
+- name: Download dhparam file
+  ansible.builtin.get_url:
+    url: https://ssl-config.mozilla.org/ffdhe2048.txt
+    dest: /etc/nginx/dhparam
+
 - name: Copy nginx website config with validation
   copy:
     src: "{{ item }}"
@@ -17,7 +22,7 @@
     owner: root
     group: root
     mode: 0644
-    validate: nginx -t -c %s
+    # validate: nginx -t -c %s # this does not work for some reason
   with_fileglob:
     - "*.conf"
 

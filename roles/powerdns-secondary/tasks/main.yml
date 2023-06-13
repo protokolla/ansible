@@ -1,0 +1,16 @@
+---
+- name: Ensure directory for Docker service exists.
+  file: "path=/opt/pdns state=directory"
+
+- name: Template docker-compose
+  ansible.builtin.template:
+    src: docker-compose.j2
+    dest: /opt/pdns/docker-compose.yml
+
+# vim /etc/systemd/resolved.conf
+# DNSStubListener=no
+
+- name: Start PowerDNS
+  community.docker.docker_compose:
+    restarted: true
+    project_src: /opt/pdns
