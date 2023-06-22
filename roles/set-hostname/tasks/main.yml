@@ -1,4 +1,4 @@
 ---
-- name: Set hostname to match the inventory.ini file
+- name: Set hostname to match DNS
   hostname:
-    name: "{{ inventory_hostname.split('@')[1] }}"
+    name: "{{ lookup('community.general.dig', inventory_hostname.split('@')[1] + '.', qtype='CNAME')[:-1] }}"

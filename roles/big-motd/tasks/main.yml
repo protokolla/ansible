@@ -1,12 +1,12 @@
-# - name: Install update-motd & software used by motd
-#   apt: name={{ item }} state=latest update_cache=yes
-#   with_items:
-#       - update-motd
-
-# - find: paths="." recurse=yes patterns="\d\d-.*"
-#   register: motds_to_copy
-# - copy: src={{ item.path }} dest=/etc/update-motd.d/
-#   owner: root
-#   mode: 0755
-#   with_items: 
-#     - "{{ motds_to_copy.files }}"
+---
+# update-motd is installed on debian and ubuntu systems by default and
+# all the other software (required by motd scripts) is installed by 
+# common-software role.
+# 
+# you can test motd locally with: run-parts .
+- name: Synchronize (also delete removed) motd scripts
+  ansible.posix.synchronize:
+    src: ./    # note the '/' <-- !!!
+    dest: /etc/update-motd.d/
+    delete: true
+    perms: true

@@ -1,9 +1,8 @@
 - name: Install common & useful software
-  apt: name={{ item }} state=latest update_cache=yes
+  apt: name={{ item }}
   with_items:
       - gpg
       - git
-      - curl
       - net-tools
       - vim
       - ncdu
@@ -12,3 +11,8 @@
       - python3-pip
       # Required by motd
       - jq
+      - curl
+      - vnstat
+      - rsync # to sync the motd
+      # backup software
+      - restic
