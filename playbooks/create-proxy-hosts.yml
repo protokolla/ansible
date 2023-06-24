@@ -1,0 +1,4 @@
+- name: Create proxy hosts
+  hosts: all
+  roles:
+    - squid

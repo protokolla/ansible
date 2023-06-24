@@ -1,0 +1,19 @@
+- name: Install squid
+  apt: name={{ item }}
+  with_items:
+      - squid
+
+- name: Copy squid configuration
+  template: 
+    src: squid.conf.j2 
+    dest: "/etc/squid/squid.conf"
+  
+- name: Copy squid password file
+  template: 
+    src: password
+    dest: "/etc/squid/password"
+
+- name: Reload squid
+  ansible.builtin.systemd:
+    name: squid
+    state: reloaded
